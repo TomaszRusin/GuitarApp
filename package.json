@@ -1,0 +1,26 @@
+{
+  "name": "GuitarApp",
+  "version": "1.0.0",
+  "description": "App that helps you learn the guitar",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TomaszRusin/GuitarApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TomaszRusin/GuitarApp/issues"
+  },
+  "homepage": "https://github.com/TomaszRusin/GuitarApp#readme",
+  "dependencies": {
+    "babel-preset-react-app": "^3.1.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0"
+  }
+}
