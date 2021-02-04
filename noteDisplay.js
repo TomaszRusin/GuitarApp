@@ -16,42 +16,138 @@ var NoteDisplay = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (NoteDisplay.__proto__ || Object.getPrototypeOf(NoteDisplay)).call(this, props));
 
-    _this.state = { clicked: false };
+    _this.onNoteChange = function (e) {
+      var valueSelectedByUser = e.target.value;
+      _this.setState({ selectedNote: valueSelectedByUser });
+    };
+
+    _this.onScaleChange = function (e) {
+      var valueSelectedByUser = e.target.value;
+      _this.setState({ selectedScale: valueSelectedByUser });
+    };
+
+    _this.state = { selectedNote: 'A', selectedScale: 'Durowa' };
     return _this;
   }
 
   _createClass(NoteDisplay, [{
     key: 'render',
     value: function render() {
-      var _this2 = this;
 
-      if (this.state.clicked) {
-        var notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G'];
-        // tu musi wchodzić input z #base-note-choice
-        var pos = notes.indexOf('C');
-        var newNotes = notes.splice(pos, 12);
-        // tu musi wchodzić input z #scale-choice
-        var scaleType = 'minor';
-        var scaleNotes = [];
+      var notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G'];
+      var pos = notes.indexOf(this.state.selectedNote);
+      var newNotes = notes.splice(pos, 12);
+      var scaleNotes = [];
 
-        switch (scaleType) {
-          case 'major':
-            var scaleNumbers = [0, 2, 4, 5, 7, 9, 11];
-            scaleNotes.splice(0, 12);
-            scaleNumbers.forEach(function (element) {
-              scaleNotes.push(newNotes[element]);
-            });
-            break;
-          case 'minor':
-            scaleNumbers = [0, 2, 3, 5, 7, 8, 10];
-            scaleNotes.splice(0, 12);
-            scaleNumbers.forEach(function (element) {
-              scaleNotes.push(newNotes[element]);
-            });
-            break;
-          default:
-        }
-        return React.createElement(
+      switch (this.state.selectedScale) {
+        case 'Durowa':
+          var scaleNumbers = [0, 2, 4, 5, 7, 9, 11];
+          scaleNotes.splice(0, 12);
+          scaleNumbers.forEach(function (element) {
+            scaleNotes.push(newNotes[element]);
+          });
+          break;
+        case 'Molowa(naturalna)':
+          scaleNumbers = [0, 2, 3, 5, 7, 8, 10];
+          scaleNotes.splice(0, 12);
+          scaleNumbers.forEach(function (element) {
+            scaleNotes.push(newNotes[element]);
+          });
+          break;
+        default:
+      }
+      return React.createElement(
+        'div',
+        null,
+        React.createElement(
+          'label',
+          null,
+          'Choose base note'
+        ),
+        React.createElement(
+          'select',
+          { onChange: this.onNoteChange },
+          React.createElement(
+            'option',
+            { value: 'A' },
+            'A'
+          ),
+          React.createElement(
+            'option',
+            { value: 'A#' },
+            'A#'
+          ),
+          React.createElement(
+            'option',
+            { value: 'B' },
+            'B'
+          ),
+          React.createElement(
+            'option',
+            { value: 'C' },
+            'C'
+          ),
+          React.createElement(
+            'option',
+            { value: 'C#' },
+            'C#'
+          ),
+          React.createElement(
+            'option',
+            { value: 'D' },
+            'D'
+          ),
+          React.createElement(
+            'option',
+            { value: 'D#' },
+            'D#'
+          ),
+          React.createElement(
+            'option',
+            { value: 'E' },
+            'E'
+          ),
+          React.createElement(
+            'option',
+            { value: 'F' },
+            'F'
+          ),
+          React.createElement(
+            'option',
+            { value: 'F#' },
+            'F#'
+          ),
+          React.createElement(
+            'option',
+            { value: 'G' },
+            'G'
+          ),
+          React.createElement(
+            'option',
+            { value: 'G#' },
+            'G#'
+          )
+        ),
+        React.createElement(
+          'label',
+          null,
+          'Choose a scale'
+        ),
+        React.createElement(
+          'select',
+          { onChange: this.onScaleChange },
+          React.createElement(
+            'option',
+            { value: 'Durowa' },
+            'Durowa'
+          ),
+          React.createElement(
+            'option',
+            { value: 'Molowa(naturalna)' },
+            'Molowa(naturalna)'
+          )
+        ),
+        React.createElement(
           'ul',
           null,
           scaleNotes.map(function (note) {
@@ -61,15 +157,7 @@ var NoteDisplay = function (_React$Component) {
               note
             );
           })
-        );
-      }
-
-      return React.createElement(
-        'button',
-        { onClick: function onClick() {
-            return _this2.setState({ clicked: true });
-          } },
-        'Kliknij \u017Ceby sprawdzi\u0107 czy dzia\u0142a'
+        )
       );
     }
   }]);
@@ -77,5 +165,5 @@ var NoteDisplay = function (_React$Component) {
   return NoteDisplay;
 }(React.Component);
 
-var domContainer = document.querySelector('#note-display');
+var domContainer = document.querySelector('#root');
 ReactDOM.render(React.createElement(NoteDisplay, null), domContainer);

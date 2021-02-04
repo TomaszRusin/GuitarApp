@@ -2,31 +2,38 @@
 
 
 
+
 class NoteDisplay extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { clicked: false };
+    this.state = {selectedNote: 'A', selectedScale: 'Durowa'};
+  }
+
+  onNoteChange = e => {
+    const valueSelectedByUser = e.target.value;
+    this.setState({selectedNote: valueSelectedByUser});
+  }
+  onScaleChange = e => {
+    const valueSelectedByUser = e.target.value;
+    this.setState({selectedScale: valueSelectedByUser});
   }
 
   render() {
-    if (this.state.clicked) {     
+    
       const notes = ['A', 'A#', 'B','C', 'C#', 'D', 'D#','E', 'F', 'F#','G', 'G#', 'A', 'A#', 'B','C', 'C#', 'D', 'D#','E', 'F', 'F#','G'];
-      // tu musi wchodzić input z #base-note-choice
-      let pos = notes.indexOf('C');
+      let pos = notes.indexOf(this.state.selectedNote);
       const newNotes = notes.splice(pos, 12);
-      // tu musi wchodzić input z #scale-choice
-      const scaleType = 'minor';
       const scaleNotes = [];
       
-      switch (scaleType) {
-        case 'major':
+      switch (this.state.selectedScale) {
+        case 'Durowa':
           let scaleNumbers = [0,2,4,5,7,9,11]
           scaleNotes.splice(0,12);
           scaleNumbers.forEach(element => {
             scaleNotes.push(newNotes[element])
           });
           break;
-        case 'minor':
+        case 'Molowa(naturalna)':
           scaleNumbers = [0,2,3,5,7,8,10];
           scaleNotes.splice(0,12);
           scaleNumbers.forEach(element => {
@@ -36,21 +43,38 @@ class NoteDisplay extends React.Component {
         default: 
       }
         return (
-          <ul>
-            {scaleNotes.map(note => (
+          <div>
+            <label>Choose base note</label>
+            <select onChange={this.onNoteChange}>
+              <option value="A">A</option>
+              <option value="A#">A#</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="C#">C#</option>
+              <option value="D">D</option>
+              <option value="D#">D#</option>
+              <option value="E">E</option>
+              <option value="F">F</option>
+              <option value="F#">F#</option>
+              <option value="G">G</option>
+              <option value="G#">G#</option>
+            </select>
+            <label>Choose a scale</label>
+            <select onChange={this.onScaleChange}>
+              <option value="Durowa">Durowa</option>
+              <option value="Molowa(naturalna)">Molowa(naturalna)</option>
+            </select>
+            <ul>
+              {scaleNotes.map(note => (
               <li key={note}>{note}</li>
-            ))}
-          </ul>
+              ))}
+            </ul>
+          </div>
         );
-    }
-
-    return (
-      <button onClick={() => this.setState({ clicked: true }) }>
-        Kliknij żeby sprawdzić czy działa
-      </button>
-    );
   }
 }
 
-let domContainer = document.querySelector('#note-display');
+
+
+let domContainer = document.querySelector('#root');
 ReactDOM.render(<NoteDisplay />, domContainer);
