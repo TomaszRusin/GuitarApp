@@ -26,7 +26,32 @@ var NoteDisplay = function (_React$Component) {
       _this.setState({ selectedScale: valueSelectedByUser });
     };
 
-    _this.state = { selectedNote: 'A', selectedScale: 'Durowa' };
+    _this.onBPMChange = function (e) {
+      if (e.target.value > 120 || e.target.value < 10) {
+        alert('Wpisz liczbę od 10-120');
+      } else {
+        var valueSelectedByUser = e.target.value;
+        _this.setState({ BPM: valueSelectedByUser });
+      }
+    };
+
+    _this.handleClick = function (e) {
+
+      if (_this.state.start) {
+        e.target.innerHTML = 'Start';
+        _this.setState({ start: false });
+      } else {
+        e.target.innerHTML = 'Stop';
+        _this.setState({ start: true });
+      }
+    };
+
+    _this.state = {
+      selectedNote: 'A',
+      selectedScale: 'Durowa',
+      BPM: 60,
+      start: false
+    };
     return _this;
   }
 
@@ -146,6 +171,17 @@ var NoteDisplay = function (_React$Component) {
             { value: 'Molowa(naturalna)' },
             'Molowa(naturalna)'
           )
+        ),
+        React.createElement(
+          'label',
+          null,
+          'Choose BPM(10-120)'
+        ),
+        React.createElement('input', { onBlur: this.onBPMChange, type: 'number', max: '120' }),
+        React.createElement(
+          'button',
+          { onClick: this.handleClick, id: 'startButtton' },
+          'Start'
         ),
         React.createElement(
           'ul',

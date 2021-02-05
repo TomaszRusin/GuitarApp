@@ -6,7 +6,12 @@
 class NoteDisplay extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {selectedNote: 'A', selectedScale: 'Durowa'};
+    this.state = {
+      selectedNote: 'A',
+      selectedScale: 'Durowa',
+      BPM: 60,
+      start: false
+    };
   }
 
   onNoteChange = e => {
@@ -16,6 +21,25 @@ class NoteDisplay extends React.Component {
   onScaleChange = e => {
     const valueSelectedByUser = e.target.value;
     this.setState({selectedScale: valueSelectedByUser});
+  }
+  onBPMChange = e => {
+    if(e.target.value > 120 || e.target.value < 10){
+      alert('Wpisz liczbę od 10-120');
+    }else{
+      const valueSelectedByUser = e.target.value;
+      this.setState({BPM: valueSelectedByUser});
+    }   
+  }
+
+  handleClick = e => {
+    
+    if(this.state.start){    
+      e.target.innerHTML = 'Start'
+      this.setState({start: false});
+    }else{
+      e.target.innerHTML = 'Stop'
+      this.setState({start: true});
+    }
   }
 
   render() {
@@ -64,6 +88,9 @@ class NoteDisplay extends React.Component {
               <option value="Durowa">Durowa</option>
               <option value="Molowa(naturalna)">Molowa(naturalna)</option>
             </select>
+            <label>Choose BPM(10-120)</label>
+            <input onBlur={this.onBPMChange} type="number" max="120"></input>
+            <button onClick={this.handleClick}  id="startButtton">Start</button>
             <ul>
               {scaleNotes.map(note => (
               <li key={note}>{note}</li>
