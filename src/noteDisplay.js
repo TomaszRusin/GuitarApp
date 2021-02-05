@@ -89,7 +89,7 @@ class NoteDisplay extends React.Component {
               <option value="Molowa(naturalna)">Molowa(naturalna)</option>
             </select>
             <label>Choose BPM(10-120)</label>
-            <input onBlur={this.onBPMChange} type="number" max="120"></input>
+            <input onBlur={this.onBPMChange} type="number" max="120" min="10" defaultValue="60"></input>
             <button onClick={this.handleClick}  id="startButtton">Start</button>
             <ul>
               {scaleNotes.map(note => (

@@ -177,7 +177,7 @@ var NoteDisplay = function (_React$Component) {
           null,
           'Choose BPM(10-120)'
         ),
-        React.createElement('input', { onBlur: this.onBPMChange, type: 'number', max: '120' }),
+        React.createElement('input', { onBlur: this.onBPMChange, type: 'number', max: '120', min: '10', defaultValue: '60' }),
         React.createElement(
           'button',
           { onClick: this.handleClick, id: 'startButtton' },
