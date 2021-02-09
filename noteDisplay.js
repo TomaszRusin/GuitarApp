@@ -47,18 +47,20 @@ var NoteDisplay = function (_React$Component) {
       var newCurrentNote = '';
       switch (_this.state.noteOrder) {
         case "Ascending":
-          console.log(noteSet.length);
-          console.log(noteSet.indexOf(_this.state.currentNote));
-          if (noteSet.indexOf(_this.state.currentNote) + 1 > noteSet.lenght) {
-            'hello';
+          if (noteSet.indexOf(_this.state.currentNote) + 1 == noteSet.length) {
+            newCurrentNote = noteSet[0];
+          } else {
+            newCurrentNote = noteSet[noteSet.indexOf(_this.state.currentNote) + 1];
           }
-          newCurrentNote = noteSet[noteSet.indexOf(_this.state.currentNote) + 1];
           break;
         case "Descending":
-          // newCurrentNote = noteSet[Math.floor(Math.random()*noteSet.length)];
+          if (noteSet.indexOf(_this.state.currentNote) == 0) {
+            newCurrentNote = noteSet[noteSet.length - 1];
+          } else {
+            newCurrentNote = noteSet[noteSet.indexOf(_this.state.currentNote) - 1];
+          }
           break;
         case "Random":
-          noteSet.splice(noteSet.indexOf(_this.state.currentNote), 1);
           newCurrentNote = noteSet[Math.floor(Math.random() * noteSet.length)];
           break;
         default:
@@ -118,6 +120,7 @@ var NoteDisplay = function (_React$Component) {
   }, {
     key: 'getCurrentNote',
     value: function getCurrentNote() {} //tę funkcję trzeba będzie wywoływać w interwale i jeżeli wszystko działa to react powinien odświerzać komponent co (interwał)
+    // current note powinna się zawsze zmieniać gdy zmieniana jest selectedNote albo selectedScale bo inaczej jak nie ma currentNote w currentNoteSet to sie wywala
 
   }, {
     key: 'render',

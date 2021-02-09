@@ -68,24 +68,27 @@ class NoteDisplay extends React.Component {
   getCurrentNote(){
 
   }//tę funkcję trzeba będzie wywoływać w interwale i jeżeli wszystko działa to react powinien odświerzać komponent co (interwał)
+  // current note powinna się zawsze zmieniać gdy zmieniana jest selectedNote albo selectedScale bo inaczej jak nie ma currentNote w currentNoteSet to sie wywala
 
   handleButtonClick = e => {
     const noteSet = this.state.currentNoteSet;
     let newCurrentNote = ''
     switch (this.state.noteOrder) {
-      case "Ascending":
-        console.log(noteSet.length)
-        console.log(noteSet.indexOf(this.state.currentNote))
-        if(noteSet.indexOf(this.state.currentNote) + 1 > noteSet.lenght){
-          'hello'
-        } 
-        newCurrentNote = noteSet[noteSet.indexOf(this.state.currentNote) + 1];
+      case "Ascending":     
+        if((noteSet.indexOf(this.state.currentNote) + 1 ) == noteSet.length){
+          newCurrentNote = noteSet[0];
+        } else{
+          newCurrentNote = noteSet[noteSet.indexOf(this.state.currentNote) + 1]; 
+        }
         break;
       case "Descending":
-        // newCurrentNote = noteSet[Math.floor(Math.random()*noteSet.length)];
+        if((noteSet.indexOf(this.state.currentNote)) == 0){
+          newCurrentNote = noteSet[noteSet.length - 1];
+        } else{
+          newCurrentNote = noteSet[noteSet.indexOf(this.state.currentNote) - 1]; 
+        }
         break;
       case "Random":
-        noteSet.splice(noteSet.indexOf(this.state.currentNote), 1);
         newCurrentNote = noteSet[Math.floor(Math.random()*noteSet.length)];
         break;
       default:
