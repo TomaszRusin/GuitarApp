@@ -10,17 +10,22 @@ class NoteDisplay extends React.Component {
       selectedNote: 'A',
       selectedScale: 'Durowa',
       BPM: 60,
-      start: false
+      noteOrder: 'Ascending',
+      start: false,
+      currentNoteSet: ["A", "B", "C#", "D", "E", "F#", "G#"],
+      currentNote: 'A'
     };
   }
 
   onNoteChange = e => {
     const valueSelectedByUser = e.target.value;
     this.setState({selectedNote: valueSelectedByUser});
+    this.setCurrentNoteSet(e.target.value, this.state.selectedScale);
   }
   onScaleChange = e => {
     const valueSelectedByUser = e.target.value;
     this.setState({selectedScale: valueSelectedByUser});
+    this.setCurrentNoteSet(this.state.selectedNote, e.target.value);
   }
   onBPMChange = e => {
     if(e.target.value > 120 || e.target.value < 10){
@@ -30,9 +35,65 @@ class NoteDisplay extends React.Component {
       this.setState({BPM: valueSelectedByUser});
     }   
   }
-
-  handleClick = e => {
+  onNoteOrderChange = e => {
+    const valueSelectedByUser = e.target.value;
+    this.setState({noteOrder: valueSelectedByUser});
+  }
+  setCurrentNoteSet(note, scale) {
+    const notes = ['A', 'A#', 'B','C', 'C#', 'D', 'D#','E', 'F', 'F#','G', 'G#', 'A', 'A#', 'B','C', 'C#', 'D', 'D#','E', 'F', 'F#','G'];
+    let pos = notes.indexOf(note);
+    const newNotes = notes.splice(pos, 12);
+    const scaleNotes = [];
     
+    switch (scale) {
+      case 'Durowa':
+        let scaleNumbers = [0,2,4,5,7,9,11]
+        scaleNotes.splice(0,12);
+        scaleNumbers.forEach(element => {
+          scaleNotes.push(newNotes[element])
+        });
+        break;
+      case 'Molowa(naturalna)':
+        scaleNumbers = [0,2,3,5,7,8,10];
+        scaleNotes.splice(0,12);
+        scaleNumbers.forEach(element => {
+          scaleNotes.push(newNotes[element])
+        });
+        break;
+      default: 
+    }
+    this.setState({currentNoteSet: scaleNotes})    
+  }
+
+  getCurrentNote(){
+
+  }//tę funkcję trzeba będzie wywoływać w interwale i jeżeli wszystko działa to react powinien odświerzać komponent co (interwał)
+
+  handleButtonClick = e => {
+    const noteSet = this.state.currentNoteSet;
+    let newCurrentNote = ''
+    switch (this.state.noteOrder) {
+      case "Ascending":
+        console.log(noteSet.length)
+        console.log(noteSet.indexOf(this.state.currentNote))
+        if(noteSet.indexOf(this.state.currentNote) + 1 > noteSet.lenght){
+          'hello'
+        } 
+        newCurrentNote = noteSet[noteSet.indexOf(this.state.currentNote) + 1];
+        break;
+      case "Descending":
+        // newCurrentNote = noteSet[Math.floor(Math.random()*noteSet.length)];
+        break;
+      case "Random":
+        noteSet.splice(noteSet.indexOf(this.state.currentNote), 1);
+        newCurrentNote = noteSet[Math.floor(Math.random()*noteSet.length)];
+        break;
+      default:
+    }
+    
+    console.log(newCurrentNote)
+    this.setState({currentNote: newCurrentNote});
+//button XD
     if(this.state.start){    
       e.target.innerHTML = 'Start'
       this.setState({start: false});
@@ -41,30 +102,16 @@ class NoteDisplay extends React.Component {
       this.setState({start: true});
     }
   }
+//to powinno tylko działać kiedy start: true
+  // componentWillMount() {
+  //   setInterval(() => this.updateNote(), 1000)
+  // }
 
   render() {
     
-      const notes = ['A', 'A#', 'B','C', 'C#', 'D', 'D#','E', 'F', 'F#','G', 'G#', 'A', 'A#', 'B','C', 'C#', 'D', 'D#','E', 'F', 'F#','G'];
-      let pos = notes.indexOf(this.state.selectedNote);
-      const newNotes = notes.splice(pos, 12);
-      const scaleNotes = [];
       
-      switch (this.state.selectedScale) {
-        case 'Durowa':
-          let scaleNumbers = [0,2,4,5,7,9,11]
-          scaleNotes.splice(0,12);
-          scaleNumbers.forEach(element => {
-            scaleNotes.push(newNotes[element])
-          });
-          break;
-        case 'Molowa(naturalna)':
-          scaleNumbers = [0,2,3,5,7,8,10];
-          scaleNotes.splice(0,12);
-          scaleNumbers.forEach(element => {
-            scaleNotes.push(newNotes[element])
-          });
-          break;
-        default: 
+      let noteVisibilityStyles = {
+        visibility: this.state.start ? 'visible' : 'hidden'
       }
         return (
           <div>
@@ -90,9 +137,16 @@ class NoteDisplay extends React.Component {
             </select>
             <label>Choose BPM(10-120)</label>
             <input onBlur={this.onBPMChange} type="number" max="120" min="10" defaultValue="60"></input>
-            <button onClick={this.handleClick}  id="startButtton">Start</button>
+            <label>Choose note order</label>
+            <select onChange={this.onNoteOrderChange}>
+              <option value="Ascending">Ascending</option>
+              <option value="Descending">Descending</option>
+              <option value="Random">Random</option>
+            </select>
+            <button onClick={this.handleButtonClick}  id="startButtton">Start</button>
+            <div style={noteVisibilityStyles}>{this.state.currentNote}</div>
             <ul>
-              {scaleNotes.map(note => (
+              {this.state.currentNoteSet.map(note => (
               <li key={note}>{note}</li>
               ))}
             </ul>

@@ -19,11 +19,13 @@ var NoteDisplay = function (_React$Component) {
     _this.onNoteChange = function (e) {
       var valueSelectedByUser = e.target.value;
       _this.setState({ selectedNote: valueSelectedByUser });
+      _this.setCurrentNoteSet(e.target.value, _this.state.selectedScale);
     };
 
     _this.onScaleChange = function (e) {
       var valueSelectedByUser = e.target.value;
       _this.setState({ selectedScale: valueSelectedByUser });
+      _this.setCurrentNoteSet(_this.state.selectedNote, e.target.value);
     };
 
     _this.onBPMChange = function (e) {
@@ -35,8 +37,36 @@ var NoteDisplay = function (_React$Component) {
       }
     };
 
-    _this.handleClick = function (e) {
+    _this.onNoteOrderChange = function (e) {
+      var valueSelectedByUser = e.target.value;
+      _this.setState({ noteOrder: valueSelectedByUser });
+    };
 
+    _this.handleButtonClick = function (e) {
+      var noteSet = _this.state.currentNoteSet;
+      var newCurrentNote = '';
+      switch (_this.state.noteOrder) {
+        case "Ascending":
+          console.log(noteSet.length);
+          console.log(noteSet.indexOf(_this.state.currentNote));
+          if (noteSet.indexOf(_this.state.currentNote) + 1 > noteSet.lenght) {
+            'hello';
+          }
+          newCurrentNote = noteSet[noteSet.indexOf(_this.state.currentNote) + 1];
+          break;
+        case "Descending":
+          // newCurrentNote = noteSet[Math.floor(Math.random()*noteSet.length)];
+          break;
+        case "Random":
+          noteSet.splice(noteSet.indexOf(_this.state.currentNote), 1);
+          newCurrentNote = noteSet[Math.floor(Math.random() * noteSet.length)];
+          break;
+        default:
+      }
+
+      console.log(newCurrentNote);
+      _this.setState({ currentNote: newCurrentNote });
+      //button XD
       if (_this.state.start) {
         e.target.innerHTML = 'Start';
         _this.setState({ start: false });
@@ -50,21 +80,23 @@ var NoteDisplay = function (_React$Component) {
       selectedNote: 'A',
       selectedScale: 'Durowa',
       BPM: 60,
-      start: false
+      noteOrder: 'Ascending',
+      start: false,
+      currentNoteSet: ["A", "B", "C#", "D", "E", "F#", "G#"],
+      currentNote: 'A'
     };
     return _this;
   }
 
   _createClass(NoteDisplay, [{
-    key: 'render',
-    value: function render() {
-
+    key: 'setCurrentNoteSet',
+    value: function setCurrentNoteSet(note, scale) {
       var notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G'];
-      var pos = notes.indexOf(this.state.selectedNote);
+      var pos = notes.indexOf(note);
       var newNotes = notes.splice(pos, 12);
       var scaleNotes = [];
 
-      switch (this.state.selectedScale) {
+      switch (scale) {
         case 'Durowa':
           var scaleNumbers = [0, 2, 4, 5, 7, 9, 11];
           scaleNotes.splice(0, 12);
@@ -81,6 +113,25 @@ var NoteDisplay = function (_React$Component) {
           break;
         default:
       }
+      this.setState({ currentNoteSet: scaleNotes });
+    }
+  }, {
+    key: 'getCurrentNote',
+    value: function getCurrentNote() {} //tę funkcję trzeba będzie wywoływać w interwale i jeżeli wszystko działa to react powinien odświerzać komponent co (interwał)
+
+  }, {
+    key: 'render',
+
+    //to powinno tylko działać kiedy start: true
+    // componentWillMount() {
+    //   setInterval(() => this.updateNote(), 1000)
+    // }
+
+    value: function render() {
+
+      var noteVisibilityStyles = {
+        visibility: this.state.start ? 'visible' : 'hidden'
+      };
       return React.createElement(
         'div',
         null,
@@ -179,14 +230,43 @@ var NoteDisplay = function (_React$Component) {
         ),
         React.createElement('input', { onBlur: this.onBPMChange, type: 'number', max: '120', min: '10', defaultValue: '60' }),
         React.createElement(
+          'label',
+          null,
+          'Choose note order'
+        ),
+        React.createElement(
+          'select',
+          { onChange: this.onNoteOrderChange },
+          React.createElement(
+            'option',
+            { value: 'Ascending' },
+            'Ascending'
+          ),
+          React.createElement(
+            'option',
+            { value: 'Descending' },
+            'Descending'
+          ),
+          React.createElement(
+            'option',
+            { value: 'Random' },
+            'Random'
+          )
+        ),
+        React.createElement(
           'button',
-          { onClick: this.handleClick, id: 'startButtton' },
+          { onClick: this.handleButtonClick, id: 'startButtton' },
           'Start'
+        ),
+        React.createElement(
+          'div',
+          { style: noteVisibilityStyles },
+          this.state.currentNote
         ),
         React.createElement(
           'ul',
           null,
-          scaleNotes.map(function (note) {
+          this.state.currentNoteSet.map(function (note) {
             return React.createElement(
               'li',
               { key: note },
