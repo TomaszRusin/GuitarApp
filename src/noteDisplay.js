@@ -15,6 +15,7 @@ class NoteDisplay extends React.Component {
       currentNoteSet: ["A", "B", "C#", "D", "E", "F#", "G#"],
       currentNote: 'A'
     };
+    // let intervalID;
   }
 
   onNoteChange = e => {
@@ -66,26 +67,21 @@ class NoteDisplay extends React.Component {
   }
 
   getCurrentNote(){
-
-  }//tę funkcję trzeba będzie wywoływać w interwale i jeżeli wszystko działa to react powinien odświerzać komponent co (interwał)
-  // current note powinna się zawsze zmieniać gdy zmieniana jest selectedNote albo selectedScale bo inaczej jak nie ma currentNote w currentNoteSet to sie wywala
-
-  handleButtonClick = e => {
-    const noteSet = this.state.currentNoteSet;
+    const noteSet = this.$r.state.currentNoteSet;
     let newCurrentNote = ''
-    switch (this.state.noteOrder) {
+    switch (this.$r.state.noteOrder) {
       case "Ascending":     
-        if((noteSet.indexOf(this.state.currentNote) + 1 ) == noteSet.length){
+        if((noteSet.indexOf(this.$r.state.currentNote) + 1 ) == noteSet.length){
           newCurrentNote = noteSet[0];
         } else{
-          newCurrentNote = noteSet[noteSet.indexOf(this.state.currentNote) + 1]; 
+          newCurrentNote = noteSet[noteSet.indexOf(this.$r.state.currentNote) + 1]; 
         }
         break;
       case "Descending":
-        if((noteSet.indexOf(this.state.currentNote)) == 0){
+        if((noteSet.indexOf(this.$r.state.currentNote)) == 0){
           newCurrentNote = noteSet[noteSet.length - 1];
         } else{
-          newCurrentNote = noteSet[noteSet.indexOf(this.state.currentNote) - 1]; 
+          newCurrentNote = noteSet[noteSet.indexOf(this.$r.state.currentNote) - 1]; 
         }
         break;
       case "Random":
@@ -93,22 +89,30 @@ class NoteDisplay extends React.Component {
         break;
       default:
     }
+    this.$r.setState({currentNote: newCurrentNote});
+  }//tę funkcję trzeba będzie wywoływać w interwale i jeżeli wszystko działa to react powinien odświerzać komponent co (interwał)
+  // current note powinna się zawsze zmieniać gdy zmieniana jest selectedNote albo selectedScale bo inaczej jak nie ma currentNote w currentNoteSet to sie wywala
+
+  startNoteChange = () => {
+    this.intervalID = setInterval(this.getCurrentNote, 1000)
+  }// długość interwału powinna być zależna od bpm
+
+  stopNoteChange = () => {
+    clearInterval(this.intervalID)
+  }
+
+  handleButtonClick = e => {
     
-    console.log(newCurrentNote)
-    this.setState({currentNote: newCurrentNote});
-//button XD
     if(this.state.start){    
       e.target.innerHTML = 'Start'
       this.setState({start: false});
+      this.stopNoteChange();
     }else{
       e.target.innerHTML = 'Stop'
       this.setState({start: true});
+      this.startNoteChange();
     }
   }
-//to powinno tylko działać kiedy start: true
-  // componentWillMount() {
-  //   setInterval(() => this.updateNote(), 1000)
-  // }
 
   render() {
     
