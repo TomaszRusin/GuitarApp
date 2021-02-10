@@ -43,6 +43,7 @@ var NoteDisplay = function (_React$Component) {
     };
 
     _this.startNoteChange = function () {
+      console.log(_this);
       _this.intervalID = setInterval(function () {
         this.$r.getCurrentNote(this.$r);
       }, 1000);
@@ -107,6 +108,7 @@ var NoteDisplay = function (_React$Component) {
   }, {
     key: 'getCurrentNote',
     value: function getCurrentNote(scope) {
+      console.log(scope);
       var noteSet = scope.state.currentNoteSet;
       var newCurrentNote = '';
       switch (scope.state.noteOrder) {

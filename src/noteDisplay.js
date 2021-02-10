@@ -66,6 +66,7 @@ class NoteDisplay extends React.Component {
   }
 
   getCurrentNote(scope){
+    console.log(scope)
     const noteSet = scope.state.currentNoteSet;
     let newCurrentNote = ''
     switch (scope.state.noteOrder) {
@@ -93,6 +94,7 @@ class NoteDisplay extends React.Component {
   // current note powinna się zawsze zmieniać gdy zmieniana jest selectedNote albo selectedScale bo inaczej jak nie ma currentNote w currentNoteSet to sie wywala
 
   startNoteChange = () => {
+    console.log(this)
     this.intervalID = setInterval(function() {this.$r.getCurrentNote(this.$r);}, 1000)
   }// długość interwału powinna być zależna od bpm
 
