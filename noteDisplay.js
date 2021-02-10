@@ -43,7 +43,9 @@ var NoteDisplay = function (_React$Component) {
     };
 
     _this.startNoteChange = function () {
-      _this.intervalID = setInterval(_this.getCurrentNote, 1000);
+      _this.intervalID = setInterval(function () {
+        this.$r.getCurrentNote();
+      }, 1000);
     };
 
     _this.stopNoteChange = function () {
@@ -72,7 +74,6 @@ var NoteDisplay = function (_React$Component) {
       currentNoteSet: ["A", "B", "C#", "D", "E", "F#", "G#"],
       currentNote: 'A'
     };
-    // let intervalID;
     return _this;
   }
 
@@ -106,21 +107,21 @@ var NoteDisplay = function (_React$Component) {
   }, {
     key: 'getCurrentNote',
     value: function getCurrentNote() {
-      var noteSet = this.$r.state.currentNoteSet;
+      var noteSet = this.state.currentNoteSet;
       var newCurrentNote = '';
-      switch (this.$r.state.noteOrder) {
+      switch (this.state.noteOrder) {
         case "Ascending":
-          if (noteSet.indexOf(this.$r.state.currentNote) + 1 == noteSet.length) {
+          if (noteSet.indexOf(this.state.currentNote) + 1 == noteSet.length) {
             newCurrentNote = noteSet[0];
           } else {
-            newCurrentNote = noteSet[noteSet.indexOf(this.$r.state.currentNote) + 1];
+            newCurrentNote = noteSet[noteSet.indexOf(this.state.currentNote) + 1];
           }
           break;
         case "Descending":
-          if (noteSet.indexOf(this.$r.state.currentNote) == 0) {
+          if (noteSet.indexOf(this.state.currentNote) == 0) {
             newCurrentNote = noteSet[noteSet.length - 1];
           } else {
-            newCurrentNote = noteSet[noteSet.indexOf(this.$r.state.currentNote) - 1];
+            newCurrentNote = noteSet[noteSet.indexOf(this.state.currentNote) - 1];
           }
           break;
         case "Random":
@@ -128,7 +129,7 @@ var NoteDisplay = function (_React$Component) {
           break;
         default:
       }
-      this.$r.setState({ currentNote: newCurrentNote });
+      this.setState({ currentNote: newCurrentNote });
     } //tę funkcję trzeba będzie wywoływać w interwale i jeżeli wszystko działa to react powinien odświerzać komponent co (interwał)
     // current note powinna się zawsze zmieniać gdy zmieniana jest selectedNote albo selectedScale bo inaczej jak nie ma currentNote w currentNoteSet to sie wywala
 
