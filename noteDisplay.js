@@ -43,10 +43,8 @@ var NoteDisplay = function (_React$Component) {
     };
 
     _this.startNoteChange = function () {
-      console.log(_this);
-      _this.intervalID = setInterval(function () {
-        this.$r.getCurrentNote(this.$r);
-      }, 1000);
+      var boundFunc = _this.getCurrentNote.bind(_this);
+      _this.intervalID = setInterval(boundFunc, 1000); //na github pages scope jakoś nie jest przekazywany do funkcji
     };
 
     _this.stopNoteChange = function () {
@@ -107,23 +105,22 @@ var NoteDisplay = function (_React$Component) {
     }
   }, {
     key: 'getCurrentNote',
-    value: function getCurrentNote(scope) {
-      console.log(scope);
-      var noteSet = scope.state.currentNoteSet;
+    value: function getCurrentNote() {
+      var noteSet = this.state.currentNoteSet;
       var newCurrentNote = '';
-      switch (scope.state.noteOrder) {
+      switch (this.state.noteOrder) {
         case "Ascending":
-          if (noteSet.indexOf(scope.state.currentNote) + 1 == noteSet.length) {
+          if (noteSet.indexOf(this.state.currentNote) + 1 == noteSet.length) {
             newCurrentNote = noteSet[0];
           } else {
-            newCurrentNote = noteSet[noteSet.indexOf(scope.state.currentNote) + 1];
+            newCurrentNote = noteSet[noteSet.indexOf(this.state.currentNote) + 1];
           }
           break;
         case "Descending":
-          if (noteSet.indexOf(scope.state.currentNote) == 0) {
+          if (noteSet.indexOf(this.state.currentNote) == 0) {
             newCurrentNote = noteSet[noteSet.length - 1];
           } else {
-            newCurrentNote = noteSet[noteSet.indexOf(scope.state.currentNote) - 1];
+            newCurrentNote = noteSet[noteSet.indexOf(this.state.currentNote) - 1];
           }
           break;
         case "Random":
@@ -132,7 +129,7 @@ var NoteDisplay = function (_React$Component) {
         default:
       }
       this.setState({ currentNote: newCurrentNote });
-    } //tę funkcję trzeba będzie wywoływać w interwale i jeżeli wszystko działa to react powinien odświerzać komponent co (interwał)
+    }
     // current note powinna się zawsze zmieniać gdy zmieniana jest selectedNote albo selectedScale bo inaczej jak nie ma currentNote w currentNoteSet to sie wywala
 
     // długość interwału powinna być zależna od bpm
