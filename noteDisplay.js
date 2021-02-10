@@ -44,7 +44,7 @@ var NoteDisplay = function (_React$Component) {
 
     _this.startNoteChange = function () {
       _this.intervalID = setInterval(function () {
-        this.$r.getCurrentNote();
+        this.$r.getCurrentNote(this.$r);
       }, 1000);
     };
 
@@ -106,22 +106,22 @@ var NoteDisplay = function (_React$Component) {
     }
   }, {
     key: 'getCurrentNote',
-    value: function getCurrentNote() {
-      var noteSet = this.state.currentNoteSet;
+    value: function getCurrentNote(scope) {
+      var noteSet = scope.state.currentNoteSet;
       var newCurrentNote = '';
-      switch (this.state.noteOrder) {
+      switch (scope.state.noteOrder) {
         case "Ascending":
-          if (noteSet.indexOf(this.state.currentNote) + 1 == noteSet.length) {
+          if (noteSet.indexOf(scope.state.currentNote) + 1 == noteSet.length) {
             newCurrentNote = noteSet[0];
           } else {
-            newCurrentNote = noteSet[noteSet.indexOf(this.state.currentNote) + 1];
+            newCurrentNote = noteSet[noteSet.indexOf(scope.state.currentNote) + 1];
           }
           break;
         case "Descending":
-          if (noteSet.indexOf(this.state.currentNote) == 0) {
+          if (noteSet.indexOf(scope.state.currentNote) == 0) {
             newCurrentNote = noteSet[noteSet.length - 1];
           } else {
-            newCurrentNote = noteSet[noteSet.indexOf(this.state.currentNote) - 1];
+            newCurrentNote = noteSet[noteSet.indexOf(scope.state.currentNote) - 1];
           }
           break;
         case "Random":
