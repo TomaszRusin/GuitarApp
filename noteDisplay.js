@@ -18,23 +18,19 @@ var NoteDisplay = function (_React$Component) {
 
     _this.onNoteChange = function (e) {
       var valueSelectedByUser = e.target.value;
-      _this.setState({ selectedNote: valueSelectedByUser });
+      _this.setState({ selectedNote: valueSelectedByUser, currentNote: valueSelectedByUser });
       _this.setCurrentNoteSet(e.target.value, _this.state.selectedScale);
     };
 
     _this.onScaleChange = function (e) {
       var valueSelectedByUser = e.target.value;
-      _this.setState({ selectedScale: valueSelectedByUser });
+      _this.setState({ selectedScale: valueSelectedByUser, currentNote: _this.state.selectedNote });
       _this.setCurrentNoteSet(_this.state.selectedNote, e.target.value);
     };
 
     _this.onBPMChange = function (e) {
-      if (e.target.value > 120 || e.target.value < 10) {
-        alert('Wpisz liczbę od 10-120');
-      } else {
-        var valueSelectedByUser = e.target.value;
-        _this.setState({ BPM: valueSelectedByUser });
-      }
+      var valueSelectedByUser = e.target.value;
+      _this.setState({ BPM: valueSelectedByUser });
     };
 
     _this.onNoteOrderChange = function (e) {
@@ -44,7 +40,8 @@ var NoteDisplay = function (_React$Component) {
 
     _this.startNoteChange = function () {
       var boundFunc = _this.getCurrentNote.bind(_this);
-      _this.intervalID = setInterval(boundFunc, 1000); //na github pages scope jakoś nie jest przekazywany do funkcji
+      var tempo = 60000 / _this.state.BPM;
+      _this.intervalID = setInterval(boundFunc, tempo); //na github pages scope jakoś nie jest przekazywany do funkcji
     };
 
     _this.stopNoteChange = function () {
@@ -99,6 +96,20 @@ var NoteDisplay = function (_React$Component) {
             scaleNotes.push(newNotes[element]);
           });
           break;
+        case 'Pentatonika durowa':
+          scaleNumbers = [0, 2, 4, 7, 9];
+          scaleNotes.splice(0, 12);
+          scaleNumbers.forEach(function (element) {
+            scaleNotes.push(newNotes[element]);
+          });
+          break;
+        case 'Pentatonika molowa':
+          scaleNumbers = [0, 3, 5, 7, 10];
+          scaleNotes.splice(0, 12);
+          scaleNumbers.forEach(function (element) {
+            scaleNotes.push(newNotes[element]);
+          });
+          break;
         default:
       }
       this.setState({ currentNoteSet: scaleNotes });
@@ -130,158 +141,173 @@ var NoteDisplay = function (_React$Component) {
       }
       this.setState({ currentNote: newCurrentNote });
     }
-    // current note powinna się zawsze zmieniać gdy zmieniana jest selectedNote albo selectedScale bo inaczej jak nie ma currentNote w currentNoteSet to sie wywala
-
-    // długość interwału powinna być zależna od bpm
-
   }, {
     key: 'render',
     value: function render() {
 
-      var noteVisibilityStyles = {
+      var noteDisplayStyles = {
         visibility: this.state.start ? 'visible' : 'hidden'
       };
       return React.createElement(
         'div',
-        null,
+        { className: 'noteApp' },
         React.createElement(
-          'label',
-          null,
-          'Choose base note'
-        ),
-        React.createElement(
-          'select',
-          { onChange: this.onNoteChange },
+          'div',
+          { className: 'settings' },
           React.createElement(
-            'option',
-            { value: 'A' },
-            'A'
+            'div',
+            { className: 'select-field' },
+            React.createElement(
+              'label',
+              null,
+              'D\u017Awi\u0119k podstawowy: '
+            ),
+            React.createElement(
+              'select',
+              { onChange: this.onNoteChange },
+              React.createElement(
+                'option',
+                { value: 'A' },
+                'A'
+              ),
+              React.createElement(
+                'option',
+                { value: 'A#' },
+                'A#'
+              ),
+              React.createElement(
+                'option',
+                { value: 'B' },
+                'B'
+              ),
+              React.createElement(
+                'option',
+                { value: 'C' },
+                'C'
+              ),
+              React.createElement(
+                'option',
+                { value: 'C#' },
+                'C#'
+              ),
+              React.createElement(
+                'option',
+                { value: 'D' },
+                'D'
+              ),
+              React.createElement(
+                'option',
+                { value: 'D#' },
+                'D#'
+              ),
+              React.createElement(
+                'option',
+                { value: 'E' },
+                'E'
+              ),
+              React.createElement(
+                'option',
+                { value: 'F' },
+                'F'
+              ),
+              React.createElement(
+                'option',
+                { value: 'F#' },
+                'F#'
+              ),
+              React.createElement(
+                'option',
+                { value: 'G' },
+                'G'
+              ),
+              React.createElement(
+                'option',
+                { value: 'G#' },
+                'G#'
+              )
+            )
           ),
           React.createElement(
-            'option',
-            { value: 'A#' },
-            'A#'
+            'div',
+            { className: 'select-field' },
+            React.createElement(
+              'label',
+              null,
+              'Skala: '
+            ),
+            React.createElement(
+              'select',
+              { onChange: this.onScaleChange },
+              React.createElement(
+                'option',
+                { value: 'Durowa' },
+                'Durowa'
+              ),
+              React.createElement(
+                'option',
+                { value: 'Molowa(naturalna)' },
+                'Molowa(naturalna)'
+              ),
+              React.createElement(
+                'option',
+                { value: 'Pentatonika durowa' },
+                'Pentatonika durowa'
+              ),
+              React.createElement(
+                'option',
+                { value: 'Pentatonika molowa' },
+                'Pentatonika molowa'
+              )
+            )
           ),
           React.createElement(
-            'option',
-            { value: 'B' },
-            'B'
+            'div',
+            { className: 'select-field' },
+            React.createElement(
+              'label',
+              null,
+              'BPM: '
+            ),
+            React.createElement('input', { onBlur: this.onBPMChange, type: 'number', defaultValue: '60' })
           ),
           React.createElement(
-            'option',
-            { value: 'C' },
-            'C'
+            'div',
+            { className: 'select-field' },
+            React.createElement(
+              'label',
+              null,
+              'Kolejno\u015B\u0107 d\u017Awi\u0119k\xF3w: '
+            ),
+            React.createElement(
+              'select',
+              { onChange: this.onNoteOrderChange },
+              React.createElement(
+                'option',
+                { value: 'Ascending' },
+                'Rosn\u0105ca'
+              ),
+              React.createElement(
+                'option',
+                { value: 'Descending' },
+                'Malej\u0105ca'
+              ),
+              React.createElement(
+                'option',
+                { value: 'Random' },
+                'Losowa'
+              )
+            )
           ),
           React.createElement(
-            'option',
-            { value: 'C#' },
-            'C#'
-          ),
-          React.createElement(
-            'option',
-            { value: 'D' },
-            'D'
-          ),
-          React.createElement(
-            'option',
-            { value: 'D#' },
-            'D#'
-          ),
-          React.createElement(
-            'option',
-            { value: 'E' },
-            'E'
-          ),
-          React.createElement(
-            'option',
-            { value: 'F' },
-            'F'
-          ),
-          React.createElement(
-            'option',
-            { value: 'F#' },
-            'F#'
-          ),
-          React.createElement(
-            'option',
-            { value: 'G' },
-            'G'
-          ),
-          React.createElement(
-            'option',
-            { value: 'G#' },
-            'G#'
+            'button',
+            { onClick: this.handleButtonClick, id: 'startButtton' },
+            'Start'
           )
-        ),
-        React.createElement(
-          'label',
-          null,
-          'Choose a scale'
-        ),
-        React.createElement(
-          'select',
-          { onChange: this.onScaleChange },
-          React.createElement(
-            'option',
-            { value: 'Durowa' },
-            'Durowa'
-          ),
-          React.createElement(
-            'option',
-            { value: 'Molowa(naturalna)' },
-            'Molowa(naturalna)'
-          )
-        ),
-        React.createElement(
-          'label',
-          null,
-          'Choose BPM(10-120)'
-        ),
-        React.createElement('input', { onBlur: this.onBPMChange, type: 'number', max: '120', min: '10', defaultValue: '60' }),
-        React.createElement(
-          'label',
-          null,
-          'Choose note order'
-        ),
-        React.createElement(
-          'select',
-          { onChange: this.onNoteOrderChange },
-          React.createElement(
-            'option',
-            { value: 'Ascending' },
-            'Ascending'
-          ),
-          React.createElement(
-            'option',
-            { value: 'Descending' },
-            'Descending'
-          ),
-          React.createElement(
-            'option',
-            { value: 'Random' },
-            'Random'
-          )
-        ),
-        React.createElement(
-          'button',
-          { onClick: this.handleButtonClick, id: 'startButtton' },
-          'Start'
         ),
         React.createElement(
           'div',
-          { style: noteVisibilityStyles },
+          { className: 'note', style: noteDisplayStyles },
           this.state.currentNote
-        ),
-        React.createElement(
-          'ul',
-          null,
-          this.state.currentNoteSet.map(function (note) {
-            return React.createElement(
-              'li',
-              { key: note },
-              note
-            );
-          })
         )
       );
     }
